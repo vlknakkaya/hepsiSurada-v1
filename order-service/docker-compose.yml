@@ -7,9 +7,9 @@ services:
     build: .
     restart: always
     ports:
-      - 19054:19054
+      - 10004:10004
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3309/hs-order?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/hs-order?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     depends_on:
       - mysql_db
     links:
@@ -21,13 +21,12 @@ services:
     image: "mysql:8.0"
     restart: always
     ports:
-      - 3309:3309
+      - 20004:3306
     environment:
       MYSQL_DATABASE: hs-order
       MYSQL_USER: admin
       MYSQL_PASSWORD: pass
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_TCP_PORT: 3309
     healthcheck:
       test: ["CMD", "mysqld", "--version"]
     volumes:

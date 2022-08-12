@@ -7,7 +7,7 @@ services:
     build: .
     restart: always
     ports:
-      - 19051:19051
+      - 10001:10001
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/hs-product?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     depends_on:
@@ -21,7 +21,7 @@ services:
     image: "mysql:8.0"
     restart: always
     ports:
-      - 3306:3306
+      - 20001:3306
     environment:
       MYSQL_DATABASE: hs-product
       MYSQL_USER: admin
