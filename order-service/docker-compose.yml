@@ -1,0 +1,34 @@
+version: "3.7"
+volumes:
+  app-vol:
+  db-vol:
+services:
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - 19054:19054
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3309/hs-order?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    depends_on:
+      - mysql_db
+    links:
+      - mysql_db:app_db
+    volumes:
+      - app-vol:/home/node/order-service-app
+      
+  mysql_db:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - 3309:3309
+    environment:
+      MYSQL_DATABASE: hs-order
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_TCP_PORT: 3309
+    healthcheck:
+      test: ["CMD", "mysqld", "--version"]
+    volumes:
+      - db-vol:/var/lib/mysql
