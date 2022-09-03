@@ -1,0 +1,20 @@
+version: "3.7"
+
+volumes:
+  app-vol:
+  
+networks:
+  kafka-net:
+    external:
+      name: kafka-net
+  
+services:
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - 10005:10005
+    volumes:
+      - app-vol:/home/node/email-service-app
+    networks:
+      - kafka-net

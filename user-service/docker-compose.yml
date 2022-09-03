@@ -22,7 +22,7 @@ services:
     links:
       - mysql_db:app_db
     volumes:
-      - app-vol:/home/node/order-service-app
+      - app-vol:/home/node/user-service-app
     networks:
       - kafka-net
       

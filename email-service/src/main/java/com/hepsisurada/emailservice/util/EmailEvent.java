@@ -1,4 +1,4 @@
-package com.hepsisurada.userservice.util;
+package com.hepsisurada.emailservice.util;
 
 public class EmailEvent extends KafkaEvent {
 
