@@ -66,7 +66,8 @@ public class UserController {
 	@Performance
 	@DeleteMapping("/{id}")
 	public void removeUserById(@PathVariable long id) {
-		service.removeById(id);
+		User entity = service.findById(id);
+		service.remove(entity);
 	}
 
 	@Log

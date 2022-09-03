@@ -24,7 +24,7 @@ public class PerformanceAspect {
 		Object proceed = joinPoint.proceed();
 		stopWatch.stop();
 		
-		logger.debug("{} executed in {} ms", methodName, stopWatch.getTotalTimeMillis());
+		logger.debug("[PERFORMANCE] - {} executed in {} ms", methodName, stopWatch.getTotalTimeMillis());
 		
 		return proceed;
 	}

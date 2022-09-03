@@ -10,16 +10,19 @@ import com.hepsisurada.userservice.aspect.annotation.Performance;
 import com.hepsisurada.userservice.exception.EntityNotFoundException;
 import com.hepsisurada.userservice.model.entity.User;
 import com.hepsisurada.userservice.repository.UserRepository;
+import com.hepsisurada.userservice.util.EmailEvent;
 
 @Service
 public class UserService {
 
 	private UserRepository repository;
+	private KafkaProducer producer;
 
 	@Autowired
-	public UserService(UserRepository repository) {
+	public UserService(UserRepository repository, KafkaProducer producer) {
 		super();
 		this.repository = repository;
+		this.producer = producer;
 	}
 
 	@Log
@@ -43,13 +46,17 @@ public class UserService {
 	@Log
 	@Performance
 	public User save(User user) {
+		producer.send(new EmailEvent("admin@hepsisurada", "New user created: " + user.getEmail()));
+		producer.send(new EmailEvent(user.getEmail(), "Your user has been created."));
 		return repository.save(user);
 	}
 
 	@Log
 	@Performance
-	public void removeById(long id) {
-		repository.deleteById(id);
+	public void remove(User user) {
+		producer.send(new EmailEvent("admin@hepsisurada", "User was removed: " + user.getEmail()));
+		producer.send(new EmailEvent(user.getEmail(), "Your user has been removed."));
+		repository.delete(user);
 	}
 	
 }
