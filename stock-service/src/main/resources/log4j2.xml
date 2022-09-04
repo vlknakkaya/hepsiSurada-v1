@@ -17,7 +17,7 @@
 			ignoreExceptions="false">
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
-				<SizeBasedTriggeringPolicy size="5O MB" />
+				<SizeBasedTriggeringPolicy size="5OMB" />
 			</Policies>
 		</RollingFile>
 	</Appenders>
