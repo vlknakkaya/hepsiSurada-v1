@@ -23,7 +23,7 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="com.example.userservice" level="debug"
+		<Logger name="com.hepsisurada.userservice" level="debug"
 			additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>

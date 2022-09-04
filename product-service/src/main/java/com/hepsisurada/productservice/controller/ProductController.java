@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hepsisurada.productservice.aspect.annotation.Log;
+import com.hepsisurada.productservice.aspect.annotation.Performance;
 import com.hepsisurada.productservice.model.converter.ProductConverter;
 import com.hepsisurada.productservice.model.dto.ProductDTO;
 import com.hepsisurada.productservice.model.entity.Product;
@@ -29,22 +31,30 @@ public class ProductController {
 	private ProductConverter converter;
 	@Autowired
 	private ProductTypeService productTypeService;
-	
+
+	@Log
+	@Performance
 	@GetMapping
 	public List<ProductDTO> getAllProducts() {
 		return converter.convertToDTOList(service.findAll());
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/{id}")
 	public ProductDTO getProductById(@PathVariable long id) {
 		return converter.convertToDTO(service.findById(id));
 	}
-	
+
+	@Log
+	@Performance
 	@PostMapping
 	public ProductDTO createProduct(@RequestBody ProductDTO productDTO) {
 		return converter.convertToDTO(service.save(converter.convertToEntity(productDTO)));
 	}
-	
+
+	@Log
+	@Performance
 	@PutMapping("/{id}")
 	public ProductDTO updateProductById(@PathVariable long id, @RequestBody ProductDTO productDTO) {
 		Product entity = service.findById(id);
@@ -55,17 +65,23 @@ public class ProductController {
 		
 		return converter.convertToDTO(service.save(entity));
 	}
-	
+
+	@Log
+	@Performance
 	@DeleteMapping("/{id}")
 	public void removeProductById(@PathVariable long id) {
 		service.removeById(id);
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/type")
 	public List<ProductDTO> getProductsByTypeId(@RequestParam(defaultValue = "0") long id) {
 		return converter.convertToDTOList(service.findByType(productTypeService.findById(id)));
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/price")
 	public List<ProductDTO> getProductsByPrice(@RequestParam(defaultValue = "0") double value, @RequestParam(required = false) Character option) {
 		if (option == null) {

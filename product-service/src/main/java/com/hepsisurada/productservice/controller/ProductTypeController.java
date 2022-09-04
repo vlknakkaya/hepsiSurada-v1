@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hepsisurada.productservice.aspect.annotation.Log;
+import com.hepsisurada.productservice.aspect.annotation.Performance;
 import com.hepsisurada.productservice.model.converter.ProductTypeConverter;
 import com.hepsisurada.productservice.model.dto.ProductTypeDTO;
 import com.hepsisurada.productservice.model.entity.ProductType;
@@ -26,7 +28,9 @@ public class ProductTypeController {
 	private ProductTypeService service;
 	@Autowired
 	private ProductTypeConverter converter;
-	
+
+	@Log
+	@Performance
 	@GetMapping
 	public List<ProductTypeDTO> getProductTypesByTopTypeId(@RequestParam(required = false) Long topType) {
 		if (topType == null) {
@@ -36,16 +40,22 @@ public class ProductTypeController {
 		}
 	}
 
+	@Log
+	@Performance
 	@GetMapping("/{id}")
 	public ProductTypeDTO getProductTypeById(@PathVariable long id) {
 		return converter.convertToDTO(service.findById(id));
 	}
 
+	@Log
+	@Performance
 	@PostMapping
 	public ProductTypeDTO createProductType(@RequestBody ProductTypeDTO productTypeDTO) {
 		return converter.convertToDTO(service.save(converter.convertToEntity(productTypeDTO)));
 	}
-	
+
+	@Log
+	@Performance
 	@PutMapping("/{id}")
 	public ProductTypeDTO updateProductTypeById(@PathVariable long id, @RequestBody ProductTypeDTO productTypeDTO) {
 		ProductType entity = service.findById(id);
@@ -55,7 +65,9 @@ public class ProductTypeController {
 		
 		return converter.convertToDTO(service.save(entity));
 	}
-	
+
+	@Log
+	@Performance
 	@DeleteMapping("/{id}")
 	public void removeProductTypeById(long id) {
 		service.removeById(id);
