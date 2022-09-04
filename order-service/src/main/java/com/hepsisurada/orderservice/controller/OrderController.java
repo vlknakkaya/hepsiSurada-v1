@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hepsisurada.orderservice.aspect.annotation.Log;
+import com.hepsisurada.orderservice.aspect.annotation.Performance;
 import com.hepsisurada.orderservice.model.converter.OrderConverter;
 import com.hepsisurada.orderservice.model.dto.OrderDTO;
 import com.hepsisurada.orderservice.model.entity.Order;
@@ -29,22 +31,30 @@ public class OrderController {
 	private OrderConverter converter;
 	@Autowired
 	private OrderStateService orderStateService; 
-	
+
+	@Log
+	@Performance
 	@GetMapping
 	public List<OrderDTO> getAllOrders() {
 		return converter.convertToDTOList(service.findAll());
 	}
 	
+	@Log
+	@Performance
 	@GetMapping("/{id}")
 	public OrderDTO getOrderById(@PathVariable long id) {
 		return converter.convertToDTO(service.findById(id));
 	}
-	
+
+	@Log
+	@Performance
 	@PostMapping
 	public OrderDTO createOrder(@RequestBody OrderDTO orderDTO) {
 		return converter.convertToDTO(service.save(converter.convertToEntity(orderDTO)));
 	}
-	
+
+	@Log
+	@Performance
 	@PutMapping("/{id}")
 	public OrderDTO updateOrderById(@PathVariable long id, @RequestBody OrderDTO orderDTO) {
 		Order entity = service.findById(id);
@@ -55,22 +65,30 @@ public class OrderController {
 		
 		return converter.convertToDTO(service.save(entity));
 	}
-	
+
+	@Log
+	@Performance
 	@DeleteMapping("/{id}")
 	public void removeOrderById(@PathVariable long id) {
 		service.removeById(id);
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/userId/{userId}")
 	public List<OrderDTO> getOrderByUserId(@PathVariable long userId) {
 		return converter.convertToDTOList(service.findByUserId(userId));
 	}
 
+	@Log
+	@Performance
 	@GetMapping("/product/{productId}")
 	public List<OrderDTO> getOrderByProductId(@PathVariable long productId) {
 		return converter.convertToDTOList(service.findByProductIdList(productId));
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/state/{stateId}")
 	public List<OrderDTO> getOrderByState(@PathVariable long stateId) {
 		OrderState state = orderStateService.findById(stateId);
