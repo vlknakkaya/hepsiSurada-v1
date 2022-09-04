@@ -1,5 +1,6 @@
 package com.hepsisurada.stockservice.model.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,8 +11,9 @@ public class Stock {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
+	@Column(unique = true)
 	private long productId;
 	
 	private long count;
@@ -26,11 +28,11 @@ public class Stock {
 		this.count = count;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

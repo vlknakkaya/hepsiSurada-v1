@@ -10,16 +10,19 @@ import com.hepsisurada.stockservice.aspect.annotation.Performance;
 import com.hepsisurada.stockservice.exception.EntityNotFoundException;
 import com.hepsisurada.stockservice.model.entity.Stock;
 import com.hepsisurada.stockservice.repository.StockRepository;
+import com.hepsisurada.stockservice.util.EmailEvent;
+import com.hepsisurada.stockservice.util.EventType;
 
 @Service
 public class StockService {
 
 	private StockRepository repository;
+	private KafkaProducer producer;
 
 	@Autowired
-	public StockService(StockRepository repository) {
-		super();
+	public StockService(StockRepository repository, KafkaProducer producer) {
 		this.repository = repository;
+		this.producer = producer;
 	}
 
 	@Log
@@ -61,13 +64,25 @@ public class StockService {
 	@Log
 	@Performance
 	public Stock save(Stock entity) {
-		return repository.save(entity);
+		boolean isCreated = entity.getId() == null;
+		
+		Stock stock = repository.save(entity);
+		
+		if (isCreated) {
+			producer.send(new EmailEvent(EventType.STOCK_CREATED, "admin@hepsisurada", "New stock was created: " + stock));
+		} else {
+			producer.send(new EmailEvent(EventType.STOCK_UPDATED, "admin@hepsisurada", "Stock was updated: " + stock));
+		}
+		
+		return stock;
 	}
 
 	@Log
 	@Performance
-	public void remove(Stock stock) {
-		repository.delete(stock);
+	public void remove(Stock entity) {
+		producer.send(new EmailEvent(EventType.STOCK_REMOVED, "admin@hepsisurada", "Stock was removed: " + entity));
+		
+		repository.delete(entity);
 	}
 	
 }

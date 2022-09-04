@@ -46,18 +46,24 @@ public class ProductTypeService {
 	@Log
 	@Performance
 	public ProductType save(ProductType entity) {
-		if (entity.getId() == null) {
-			producer.send(new EmailEvent(EventType.PRODUCT_TYPE_CREATED, "admin@hepsisurada", "New product type was added: " + entity.getName()));
+		boolean isCreated = entity.getId() == null;
+		
+		ProductType productType = repository.save(entity);
+		
+		if (isCreated) {
+			producer.send(new EmailEvent(EventType.PRODUCT_TYPE_CREATED, "admin@hepsisurada", "New product type was added: " + productType));
 		} else {
-			producer.send(new EmailEvent(EventType.PRODUCT_TYPE_UPDATED, "admin@hepsisurada", "Product type was updated: " + entity.getId()));
+			producer.send(new EmailEvent(EventType.PRODUCT_TYPE_UPDATED, "admin@hepsisurada", "Product type was updated: " + productType));
 		}
-		return repository.save(entity);
+		
+		return productType;
 	}
 
 	@Log
 	@Performance
 	public void remove(ProductType entity) {
-		producer.send(new EmailEvent(EventType.PRODUCT_TYPE_REMOVED, "admin@hepsisurada", "Product type was removed: " + entity.getId()));
+		producer.send(new EmailEvent(EventType.PRODUCT_TYPE_REMOVED, "admin@hepsisurada", "Product type was removed: " + entity));
+		
 		repository.delete(entity);
 	}
 	

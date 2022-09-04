@@ -45,27 +45,27 @@ public class UserService {
 
 	@Log
 	@Performance
-	public User save(User user) {
-		if (user.getId() == null) {
-			producer.send(new EmailEvent(EventType.USER_CREATED, "admin@hepsisurada", "New user was created: " + user.getEmail()));
+	public User save(User entity) {
+		boolean isCreated = entity.getId() == null;
+		
+		User user = repository.save(entity);
+		
+		if (isCreated) {
+			producer.send(new EmailEvent(EventType.USER_CREATED, "admin@hepsisurada", "New user was created: " + user));
 			producer.send(new EmailEvent(EventType.USER_CREATED, user.getEmail(), "Your user has been created."));
 		} else {
-			producer.send(new EmailEvent(EventType.USER_UPDATED, "admin@hepsisurada", "User was updated: " + user.getEmail()));
+			producer.send(new EmailEvent(EventType.USER_UPDATED, "admin@hepsisurada", "User was updated: " + user));
 			producer.send(new EmailEvent(EventType.USER_UPDATED, user.getEmail(), "Your user has been updated."));
 		}
 		
-		return repository.save(user);
+		return user;
 	}
 
 	@Log
 	@Performance
 	public void remove(User user) {
-		try {
-			findByEmail(user.getEmail());
-		} catch (EntityNotFoundException e) {
-			producer.send(new EmailEvent(EventType.USER_REMOVED, "admin@hepsisurada", "User was removed: " + user.getEmail()));
-			producer.send(new EmailEvent(EventType.USER_REMOVED, user.getEmail(), "Your user has been removed."));
-		}
+		producer.send(new EmailEvent(EventType.USER_REMOVED, "admin@hepsisurada", "User was removed: " + user));
+		producer.send(new EmailEvent(EventType.USER_REMOVED, user.getEmail(), "Your user has been removed."));
 		
 		repository.delete(user);
 	}

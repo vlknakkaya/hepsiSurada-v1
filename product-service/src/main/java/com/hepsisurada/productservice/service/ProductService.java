@@ -65,19 +65,23 @@ public class ProductService {
 	@Log
 	@Performance
 	public Product save(Product entity) {
-		if (entity.getId() == null) {
-			producer.send(new EmailEvent(EventType.PRODUCT_CREATED, "admin@hepsisurada", "New product was added: " + entity.getName()));
+		boolean isCreated = entity.getId() == null;
+		
+		Product product = repository.save(entity);
+		
+		if (isCreated) {
+			producer.send(new EmailEvent(EventType.PRODUCT_CREATED, "admin@hepsisurada", "New product was added: " + product));
 		} else {
-			producer.send(new EmailEvent(EventType.PRODUCT_UPDATED, "admin@hepsisurada", "Product was updated: " + entity.getId()));
+			producer.send(new EmailEvent(EventType.PRODUCT_UPDATED, "admin@hepsisurada", "Product was updated: " + product));
 		}
 		
-		return repository.save(entity);
+		return product;
 	}
 
 	@Log
 	@Performance
 	public void remove(Product entity) {
-		producer.send(new EmailEvent(EventType.PRODUCT_REMOVED, "admin@hepsisurada", "Product was removed: " + entity.getId()));
+		producer.send(new EmailEvent(EventType.PRODUCT_REMOVED, "admin@hepsisurada", "Product was removed: " + entity));
 		
 		repository.delete(entity);
 	}
