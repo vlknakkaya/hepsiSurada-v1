@@ -11,7 +11,7 @@ public class OrderState {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(unique = true)
 	private String name;
@@ -25,11 +25,11 @@ public class OrderState {
 		this.name = name;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -10,16 +10,19 @@ import com.hepsisurada.orderservice.aspect.annotation.Performance;
 import com.hepsisurada.orderservice.exception.EntityNotFoundException;
 import com.hepsisurada.orderservice.model.entity.OrderState;
 import com.hepsisurada.orderservice.repository.OrderStateRepository;
+import com.hepsisurada.orderservice.util.EmailEvent;
+import com.hepsisurada.orderservice.util.EventType;
 
 @Service
 public class OrderStateService {
 
 	private OrderStateRepository repository;
+	private KafkaProducer producer;
 
 	@Autowired
-	public OrderStateService(OrderStateRepository repository) {
-		super();
+	public OrderStateService(OrderStateRepository repository, KafkaProducer producer) {
 		this.repository = repository;
+		this.producer = producer;
 	}
 
 	@Log
@@ -36,14 +39,26 @@ public class OrderStateService {
 
 	@Log
 	@Performance
-	public OrderState save(OrderState orderState) {
-		return repository.save(orderState);
+	public OrderState save(OrderState entity) {
+		boolean isCreated = entity.getId() == null;
+		
+		OrderState orderState = repository.save(entity);
+		
+		if (isCreated) {
+			producer.send(new EmailEvent(EventType.ORDER_STATE_CREATED, "admin@hepsisurada", "New order state was created: " + orderState));
+		} else {
+			producer.send(new EmailEvent(EventType.ORDER_STATE_UPDATED, "admin@hepsisurada", "Order state was updated: " + orderState));
+		}
+		
+		return orderState;
 	}
 
 	@Log
 	@Performance
-	public void removeById(long id) {
-		repository.deleteById(id);
+	public void remove(OrderState entity) {
+		producer.send(new EmailEvent(EventType.ORDER_STATE_REMOVED, "admin@hepsisurada", "Order state was removed: " + entity));
+		
+		repository.delete(entity);
 	}
 	
 }

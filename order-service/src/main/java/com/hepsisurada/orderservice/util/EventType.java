@@ -1,4 +1,4 @@
-package com.hepsisurada.userservice.util;
+package com.hepsisurada.orderservice.util;
 
 public class EventType {
 	

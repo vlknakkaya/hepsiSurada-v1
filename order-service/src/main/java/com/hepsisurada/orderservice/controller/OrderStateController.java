@@ -64,7 +64,8 @@ public class OrderStateController {
 	@Performance
 	@DeleteMapping("/{id}")
 	public void removeOrderStateById(@PathVariable long id) {
-		service.removeById(id);
+		OrderState entity = service.findById(id);
+		service.remove(entity);
 	}
 	
 }

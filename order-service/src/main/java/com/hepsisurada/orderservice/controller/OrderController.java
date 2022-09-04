@@ -70,7 +70,8 @@ public class OrderController {
 	@Performance
 	@DeleteMapping("/{id}")
 	public void removeOrderById(@PathVariable long id) {
-		service.removeById(id);
+		Order entity = service.findById(id);
+		service.remove(entity);
 	}
 
 	@Log

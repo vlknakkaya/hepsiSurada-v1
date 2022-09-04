@@ -19,5 +19,11 @@ public class EventType {
 	public static final int STOCK_CREATED = 10;
 	public static final int STOCK_UPDATED = 11;
 	public static final int STOCK_REMOVED = 12;
+	public static final int ORDER_STATE_CREATED = 13;
+	public static final int ORDER_STATE_UPDATED = 14;
+	public static final int ORDER_STATE_REMOVED = 15;
+	public static final int ORDER_CREATED = 16;
+	public static final int ORDER_UPDATED = 17;
+	public static final int ORDER_REMOVED = 18;
 	
 }
