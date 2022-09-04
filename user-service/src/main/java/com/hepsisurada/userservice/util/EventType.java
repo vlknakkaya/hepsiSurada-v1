@@ -9,6 +9,8 @@ public class EventType {
 	
 	// Email event types
 	public static final int USER_CREATED = 1;
-	public static final int USER_REMOVED = 2;
+	public static final int USER_UPDATED = 2;
+	public static final int USER_REMOVED = 3;
+	public static final int PRODUCT_CREATED = 4;
 	
 }

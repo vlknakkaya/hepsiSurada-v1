@@ -21,7 +21,6 @@ public class UserService {
 
 	@Autowired
 	public UserService(UserRepository repository, KafkaProducer producer) {
-		super();
 		this.repository = repository;
 		this.producer = producer;
 	}
@@ -47,11 +46,12 @@ public class UserService {
 	@Log
 	@Performance
 	public User save(User user) {
-		try {
-			findByEmail(user.getEmail());
-		} catch (EntityNotFoundException e) {
-			producer.send(new EmailEvent(EventType.USER_CREATED, "admin@hepsisurada", "New user created: " + user.getEmail()));
+		if (user.getId() == null) {
+			producer.send(new EmailEvent(EventType.USER_CREATED, "admin@hepsisurada", "New user was created: " + user.getEmail()));
 			producer.send(new EmailEvent(EventType.USER_CREATED, user.getEmail(), "Your user has been created."));
+		} else {
+			producer.send(new EmailEvent(EventType.USER_UPDATED, "admin@hepsisurada", "User was updated: " + user.getEmail()));
+			producer.send(new EmailEvent(EventType.USER_UPDATED, user.getEmail(), "Your user has been updated."));
 		}
 		
 		return repository.save(user);

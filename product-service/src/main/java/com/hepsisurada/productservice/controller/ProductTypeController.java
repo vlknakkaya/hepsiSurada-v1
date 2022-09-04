@@ -70,7 +70,8 @@ public class ProductTypeController {
 	@Performance
 	@DeleteMapping("/{id}")
 	public void removeProductTypeById(long id) {
-		service.removeById(id);
+		ProductType entity = service.findById(id);
+		service.remove(entity);
 	}
 
 }

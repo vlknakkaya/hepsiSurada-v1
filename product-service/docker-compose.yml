@@ -1,7 +1,14 @@
 version: "3.7"
+
 volumes:
   app-vol:
   db-vol:
+  
+networks:
+  kafka-net:
+    external:
+      name: kafka-net
+
 services:
   api_service:
     build: .
@@ -15,7 +22,9 @@ services:
     links:
       - mysql_db:app_db
     volumes:
-      - app-vol:/home/node/order-service-app
+      - app-vol:/home/node/product-service-app
+    networks:
+      - kafka-net
       
   mysql_db:
     image: "mysql:8.0"
@@ -31,4 +40,6 @@ services:
       test: ["CMD", "mysqld", "--version"]
     volumes:
       - db-vol:/var/lib/mysql
+    networks:
+      - kafka-net
  

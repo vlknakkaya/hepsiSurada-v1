@@ -11,15 +11,19 @@ import com.hepsisurada.productservice.exception.EntityNotFoundException;
 import com.hepsisurada.productservice.model.entity.Product;
 import com.hepsisurada.productservice.model.entity.ProductType;
 import com.hepsisurada.productservice.repository.ProductRepository;
+import com.hepsisurada.productservice.util.EmailEvent;
+import com.hepsisurada.productservice.util.EventType;
 
 @Service
 public class ProductService {
 
 	private ProductRepository repository;
+	private KafkaProducer producer;
 	
 	@Autowired
-	public ProductService(ProductRepository repository) {
+	public ProductService(ProductRepository repository, KafkaProducer producer) {
 		this.repository = repository;
+		this.producer = producer;
 	}
 
 	@Log
@@ -61,13 +65,21 @@ public class ProductService {
 	@Log
 	@Performance
 	public Product save(Product entity) {
+		if (entity.getId() == null) {
+			producer.send(new EmailEvent(EventType.PRODUCT_CREATED, "admin@hepsisurada", "New product was added: " + entity.getName()));
+		} else {
+			producer.send(new EmailEvent(EventType.PRODUCT_UPDATED, "admin@hepsisurada", "Product was updated: " + entity.getId()));
+		}
+		
 		return repository.save(entity);
 	}
 
 	@Log
 	@Performance
-	public void removeById(long id) {
-		repository.deleteById(id);
+	public void remove(Product entity) {
+		producer.send(new EmailEvent(EventType.PRODUCT_REMOVED, "admin@hepsisurada", "Product was removed: " + entity.getId()));
+		
+		repository.delete(entity);
 	}
 
 }
