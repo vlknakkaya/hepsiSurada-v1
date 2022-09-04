@@ -17,6 +17,8 @@ import com.hepsisurada.stockservice.model.converter.StockConverter;
 import com.hepsisurada.stockservice.model.dto.StockDTO;
 import com.hepsisurada.stockservice.model.entity.Stock;
 import com.hepsisurada.stockservice.service.StockService;
+import com.hepsisurada.stockservice.aspect.annotation.Log;
+import com.hepsisurada.stockservice.aspect.annotation.Performance;
 
 @RestController
 @RequestMapping("/stock")
@@ -26,22 +28,30 @@ public class StockController {
 	private StockService service;
 	@Autowired
 	private StockConverter converter;
-	
+
+	@Log
+	@Performance
 	@GetMapping
 	public List<StockDTO> getAllStocks() {
 		return converter.convertToDTOList(service.findAll());
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/{productId}")
 	public StockDTO getStockByproductId(@PathVariable long productId) {
 		return converter.convertToDTO(service.findByProductId(productId));
 	}
-	
+
+	@Log
+	@Performance
 	@PostMapping
 	public StockDTO createStock(@RequestBody StockDTO stockDTO) {
 		return converter.convertToDTO(service.save(converter.convertToEntity(stockDTO)));
 	}
-	
+
+	@Log
+	@Performance
 	@PutMapping("/{productId}")
 	public StockDTO updateStockById(@PathVariable long productId, @RequestBody StockDTO stockDTO) {
 		Stock entity = service.findByProductId(productId);
@@ -51,11 +61,15 @@ public class StockController {
 		return converter.convertToDTO(service.save(entity));
 	}
 
+	@Log
+	@Performance
 	@DeleteMapping("/{productId}")
 	public void removeStockByProductId(@PathVariable long productId) {
 		service.remove(service.findByProductId(productId));
 	}
-	
+
+	@Log
+	@Performance
 	@GetMapping("/count")
 	public List<StockDTO> getStocksByCount(@RequestParam(defaultValue = "0") long value, @RequestParam(required = false) Character option) {
 		if (option == null) {

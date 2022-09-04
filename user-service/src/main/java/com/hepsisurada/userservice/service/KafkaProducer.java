@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hepsisurada.userservice.aspect.annotation.Performance;
 import com.hepsisurada.userservice.aspect.annotation.Log;
 import com.hepsisurada.userservice.util.KafkaEvent;
 
@@ -20,8 +21,9 @@ public class KafkaProducer {
 		this.objectMapper = objectMapper;
 		this.kafkaTemplate = kafkaTemplate;
 	}
-	
+
 	@Log
+	@Performance
 	public void send(KafkaEvent event) {
 		try {
 			String message = objectMapper.writeValueAsString(event);
