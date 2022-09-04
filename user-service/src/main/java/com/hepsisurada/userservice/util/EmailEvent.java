@@ -12,8 +12,9 @@ public class EmailEvent extends KafkaEvent {
 		super(TOPIC_NAME);
 	}
 
-	public EmailEvent(String to, String message) {
+	public EmailEvent(int eventType, String to, String message) {
 		super(TOPIC_NAME);
+		super.setEventType(eventType);
 		this.to = to;
 		this.message = message;
 	}
@@ -36,7 +37,7 @@ public class EmailEvent extends KafkaEvent {
 
 	@Override
 	public String toString() {
-		return "EmailEvent [id=" + getId() + ", date=" + getDate() + ", to=" + to + ", message=" + message + "]";
+		return "EmailEvent [id=" + getId() + ", date=" + getDate() + ", eventType=" + getEventType() + ", to=" + to + ", message=" + message + "]";
 	}
 
 }

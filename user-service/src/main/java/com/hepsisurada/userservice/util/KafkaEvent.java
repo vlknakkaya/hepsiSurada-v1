@@ -11,6 +11,8 @@ public abstract class KafkaEvent {
 
 	private LocalDateTime date = LocalDateTime.now();
 	
+	private int eventType = EventType.GENERAL;
+	
 	@JsonIgnore
 	private String topic = "general-topic";
 
@@ -37,6 +39,14 @@ public abstract class KafkaEvent {
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+
+	public int getEventType() {
+		return eventType;
+	}
+
+	public void setEventType(int eventType) {
+		this.eventType = eventType;
 	}
 
 	public String getTopic() {

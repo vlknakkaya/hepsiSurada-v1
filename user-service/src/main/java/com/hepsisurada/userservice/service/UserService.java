@@ -11,6 +11,7 @@ import com.hepsisurada.userservice.exception.EntityNotFoundException;
 import com.hepsisurada.userservice.model.entity.User;
 import com.hepsisurada.userservice.repository.UserRepository;
 import com.hepsisurada.userservice.util.EmailEvent;
+import com.hepsisurada.userservice.util.EventType;
 
 @Service
 public class UserService {
@@ -46,16 +47,26 @@ public class UserService {
 	@Log
 	@Performance
 	public User save(User user) {
-		producer.send(new EmailEvent("admin@hepsisurada", "New user created: " + user.getEmail()));
-		producer.send(new EmailEvent(user.getEmail(), "Your user has been created."));
+		try {
+			findByEmail(user.getEmail());
+		} catch (EntityNotFoundException e) {
+			producer.send(new EmailEvent(EventType.USER_CREATED, "admin@hepsisurada", "New user created: " + user.getEmail()));
+			producer.send(new EmailEvent(EventType.USER_CREATED, user.getEmail(), "Your user has been created."));
+		}
+		
 		return repository.save(user);
 	}
 
 	@Log
 	@Performance
 	public void remove(User user) {
-		producer.send(new EmailEvent("admin@hepsisurada", "User was removed: " + user.getEmail()));
-		producer.send(new EmailEvent(user.getEmail(), "Your user has been removed."));
+		try {
+			findByEmail(user.getEmail());
+		} catch (EntityNotFoundException e) {
+			producer.send(new EmailEvent(EventType.USER_REMOVED, "admin@hepsisurada", "User was removed: " + user.getEmail()));
+			producer.send(new EmailEvent(EventType.USER_REMOVED, user.getEmail(), "Your user has been removed."));
+		}
+		
 		repository.delete(user);
 	}
 	

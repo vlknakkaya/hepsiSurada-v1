@@ -23,7 +23,7 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="com.example.emailservice" level="debug"
+		<Logger name="com.hepsisurada.emailservice" level="debug"
 			additivity="false">
 			<AppenderRef ref="RollingFile" />
 		</Logger>
