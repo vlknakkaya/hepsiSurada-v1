@@ -10,13 +10,14 @@ networks:
       name: kafka-net
   
 services:
-  api_service:
+  user_service:
     build: .
     restart: always
+    container_name: user-service-app
     ports:
       - 10003:10003
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/hs-user?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://user_service_db:3306/hs-user?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     depends_on:
       - mysql_db
     links:
@@ -26,9 +27,10 @@ services:
     networks:
       - kafka-net
       
-  mysql_db:
+  user_service_db:
     image: "mysql:8.0"
     restart: always
+    container_name: user-service-db
     ports:
       - 20003:3306
     environment:
