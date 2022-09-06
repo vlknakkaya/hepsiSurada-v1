@@ -9,9 +9,10 @@ networks:
       name: kafka-net
   
 services:
-  api_service:
+  enail_service:
     build: .
     restart: always
+    container_name: email-service-app
     ports:
       - 10005:10005
     volumes:

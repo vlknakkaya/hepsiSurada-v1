@@ -1,0 +1,17 @@
+
+server:
+  port: '8080'
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: user-service
+        uri: http://user-service-app:10003/
+        predicates:
+        - Path=/user/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service-app:8061/eureka/

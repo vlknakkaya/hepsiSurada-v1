@@ -1,0 +1,14 @@
+
+server:
+  port: '10005'
+
+spring:
+  kafka:
+    bootstrap-servers: 'kafka:29092'
+    consumer:
+      group-id: default
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service-app:8061/eureka/

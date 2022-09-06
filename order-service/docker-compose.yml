@@ -10,25 +10,27 @@ networks:
       name: kafka-net
       
 services:
-  api_service:
+  order_service:
     build: .
     restart: always
+    container_name: order-service-app
     ports:
       - 10004:10004
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/hs-order?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://order_service_db:3306/hs-order?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     depends_on:
-      - mysql_db
+      - order_service_db
     links:
-      - mysql_db:app_db
+      - order_service_db:app_db
     volumes:
       - app-vol:/home/node/order-service-app
     networks:
       - kafka-net
       
-  mysql_db:
+  order_service_db:
     image: "mysql:8.0"
     restart: always
+    container_name: order-service-db
     ports:
       - 20004:3306
     environment:

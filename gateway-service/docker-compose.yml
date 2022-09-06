@@ -9,9 +9,10 @@ networks:
       name: kafka-net
   
 services:
-  api_service:
+  gateway_service:
     build: .
     restart: always
+    container_name: gateway-service-app
     ports:
       - 8080:8080
     volumes:
