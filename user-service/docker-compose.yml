@@ -19,9 +19,9 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://user_service_db:3306/hs-user?useUnicode=yes&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     depends_on:
-      - mysql_db
+      - user_service_db
     links:
-      - mysql_db:app_db
+      - user_service_db:app_db
     volumes:
       - app-vol:/home/node/user-service-app
     networks:

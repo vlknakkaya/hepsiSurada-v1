@@ -1,0 +1,22 @@
+version: "3.7"
+
+volumes:
+  app-vol:
+  db-vol:
+  
+networks:
+  kafka-net:
+    external:
+      name: kafka-net
+  
+services:
+  app:
+    build: .
+    restart: always
+    container_name: discovery-service-app
+    ports:
+      - 8061:8061
+    volumes:
+      - app-vol:/home/node/discovery-service-app
+    networks:
+      - kafka-net

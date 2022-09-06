@@ -1,0 +1,22 @@
+version: "3.7"
+
+volumes:
+  app-vol:
+  db-vol:
+  
+networks:
+  kafka-net:
+    external:
+      name: kafka-net
+  
+services:
+  config_service:
+    build: .
+    restart: always
+    container_name: config-service-app
+    ports:
+      - 8088:8088
+    volumes:
+      - app-vol:/home/node/config-service-app
+    networks:
+      - kafka-net
