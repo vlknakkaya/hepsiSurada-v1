@@ -7,9 +7,21 @@ spring:
     gateway:
       routes:
       - id: user-service
-        uri: http://user-service-app:10003/
+        uri: lb://user-service
         predicates:
         - Path=/user/**
+      - id: product-service
+        uri: lb://product-service
+        predicates:
+        - Path=/product/**
+      - id: stock-service
+        uri: lb://stock-service
+        predicates:
+        - Path=/stock/**
+      - id: order-service
+        uri: lb://order-service
+        predicates:
+        - Path=/order/**
 
 eureka:
   client:
