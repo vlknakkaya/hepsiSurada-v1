@@ -2,6 +2,8 @@ version: "3.7"
 
 volumes:
   app-vol:
+  prometheus-vol:
+  grafana-vol:
   
 networks:
   kafka-net:
@@ -17,5 +19,28 @@ services:
       - 8080:8080
     volumes:
       - app-vol:/home/node/gateway-service-app
+    networks:
+      - kafka-net
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    container_name: prometheus
+    restart: unless-stopped
+    command: '--config.file=/etc/prometheus/config.yml'
+    volumes:
+      - './prometheus.yml:/etc/prometheus/config.yml'
+    ports:
+      - 9090:9090
+    networks:
+      - kafka-net
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    links:
+      - prometheus:prometheus
+    volumes:
+      - grafana-vol:/var/lib/grafana
     networks:
       - kafka-net

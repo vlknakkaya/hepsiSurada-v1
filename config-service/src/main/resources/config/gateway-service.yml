@@ -3,6 +3,10 @@ server:
   port: '8080'
 
 spring:
+  application:
+    name: gateway-service
+  main:
+    web-application-type: reactive
   cloud:
     gateway:
       routes:
@@ -29,9 +33,19 @@ eureka:
       defaultZone: http://discovery-service-app:8061/eureka/
 
 management:
+  endpoint:
+    prometheus:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: '*'
+    jmx:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
   security:
     enabled: false
